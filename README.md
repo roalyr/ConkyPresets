@@ -1,0 +1,2 @@
+# ConkyPresets
+Custom conky presets
