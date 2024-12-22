@@ -1,0 +1,104 @@
+conky.config = {
+	alignment = 'top_right',
+	background = false,
+	border_inner_margin = 0,
+	border_width = 0,
+	default_color = 'FFFFFF',
+	default_outline_color = 'black',
+	default_shade_color = 'black',
+	double_buffer = true,
+	draw_borders = false,
+	draw_graph_borders = false,
+	draw_outline = false,
+	draw_shades = false,
+	gap_x = 20,
+	gap_y = 5,
+	minimum_width = 175, minimum_height = 0,
+	no_buffers = true,
+	override_utf8_locale = true,
+	own_window_hints = 'undecorated,below,sticky,skip_taskbar,skip_pager',
+	own_window_transparent = true,
+	own_window = true,
+	pad_percents = 2,
+	short_units = true,
+	stippled_borders = 0,
+	top_name_width = 5,
+	update_interval = 1,
+	uppercase = false,
+	use_spacer = 'right',
+	use_xft = true,
+	xftalpha = 1.0,--0.2
+	font = 'Monospace:bold:size=9.5',
+	
+	default_color = 'CCCCCC',
+	color1 = 'FFFFFF',
+	color2 = 'FF9922',
+	color3 = '1CE3BB',
+	color4 = 'FFCC22',
+
+	own_window_argb_value = 0,
+	own_window_argb_visual = true,
+	own_window_colour = '000000',
+
+};
+
+-- fluxbox adjustment
+
+return_code = os.execute('pidof -q fluxbox')
+if _VERSION == 'Lua 5.1' and math.floor(return_code/256) == 0 or
+   _VERSION ~= 'Lua 5.1' and return_code then
+   conky.config.own_window_transparent = true
+   conky.config.own_window_argb_visual = false
+end
+
+conky.text = [[
+${color2}${font Monospace:bold:size=28}${time %H:%M:%S}${font}
+
+${color4}Date${goto 101}${time %d.%m.%Y}
+${color4}Day${goto 101}${time %A}
+
+${color3}MEMORY ${membar}${color}
+
+Total${goto 101}${memmax}
+In Use${color}${goto 101}${mem}
+Free${goto 101}${memfree}
+Free up to${goto 101}${color1}${memeasyfree}
+${color}${top_mem name 1}${goto 101}${color1}${top_mem mem_res 1}
+${color}${top_mem name 2}${goto 101}${color1}${top_mem mem_res 2}
+
+${color3}SWAP ${swapbar}${color}
+
+Total${goto 101}${swapmax}
+Free${goto 101}${swapfree}
+Used${goto 101}${color1}${swap}
+
+${color3}CPU ${cpubar}${color}
+
+Frequency${goto 101}${freq_g} GHz
+Temperature${goto 101}${acpitemp}C
+
+CPU0${goto 101}${cpu cpu0}%
+CPU1${goto 101}${cpu cpu1}%
+CPU2${goto 101}${cpu cpu2}%
+CPU3${goto 101}${cpu cpu3}%
+${color}${top name 1}${goto 85}${color1}${top cpu 1}
+${color}${top name 2}${goto 85}${color1}${top cpu 2}
+
+${color3}HOME DIR ${fs_bar /home}${color}
+
+Read${goto 101}${diskio_read}
+Write${goto 101}${diskio_write}
+Root free${goto 101}${fs_free /}
+Home free${goto 101}${fs_free /home}
+
+${if_existing /sys/class/power_supply/BAT0}\
+${color3}BATTERY ${battery_bar BAT0}${color}
+
+${color}Charge${goto 101}${color1}${battery_short BAT0}
+${color}Power Draw${goto 101}${color1}${execp "awk '{printf "%.2f\n", $1 / 1000000}' /sys/class/power_supply/BAT0/power_now"} W
+${color}Thresholds${goto 101}${color1}${execp "cat /sys/class/power_supply/BAT0/charge_control_start_threshold"}% - ${execp "cat /sys/class/power_supply/BAT0/charge_control_end_threshold"}%
+${color}Uptime${goto 101}${uptime}
+${color}Time left${goto 101}${battery_time BAT0}
+
+${else}\
+]];
